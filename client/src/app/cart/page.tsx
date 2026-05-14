@@ -152,7 +152,7 @@ const CartPage = () => {
                           Quantity: {item.quantity}
                         </p>
                         <p className="text-xs text-gray-500">
-                          Size: {item.selectedSize}
+                          Size: {item.selectedSize.toUpperCase()}
                         </p>
                         <p className="text-xs text-gray-500">
                           Color: {item.selectedColor}

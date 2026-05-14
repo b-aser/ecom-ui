@@ -1,15 +1,19 @@
-'use client'
+"use client";
+import useCartStore from "@/stores/cartStore";
 import { ProductType } from "@/types";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const ProductCard = ({ product }: { product: ProductType }) => {
   const [productType, setProductType] = useState({
     size: product.sizes[0],
     color: product.colors[0],
   });
+
+  const { addToCart } = useCartStore();
 
   const handleProductType = ({
     type,
@@ -22,6 +26,16 @@ const ProductCard = ({ product }: { product: ProductType }) => {
       ...prev,
       [type]: value,
     }));
+  };
+
+  const handleAddToCart = () => {
+    addToCart({
+      ...product,
+      quantity: 1,
+      selectedSize: productType.size,
+      selectedColor: productType.color,
+    });
+    toast.success("Product added to cart!");
   };
   return (
     <div className="shadow-lg rounded-lg overflow-hidden">
@@ -70,7 +84,9 @@ const ProductCard = ({ product }: { product: ProductType }) => {
               {product.colors.map((color) => (
                 <div
                   className={`cursor-pointer border rounded-full ${
-                    productType.color === color ? "border-gray-500 p-[1.2px]" : "border-gray-200"
+                    productType.color === color
+                      ? "border-gray-500 p-[1.2px]"
+                      : "border-gray-200"
                   } p-[1.2px]`}
                   key={color}
                   onClick={() =>
@@ -89,7 +105,10 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         {/* Price and Add-to-Cart */}
         <div className="flex items-center justify-between">
           <span className="font-medium">${product.price.toFixed(2)}</span>
-          <button className="ring ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2">
+          <button
+            onClick={handleAddToCart}
+            className="ring ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2"
+          >
             <ShoppingCart className="w-4 h-4" /> Add to Cart
           </button>
         </div>
